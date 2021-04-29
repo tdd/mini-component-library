@@ -22,38 +22,40 @@ const DIMS = {
 
 const BarContainer = styled.div`
   box-shadow: inset 0px 2px 4px ${COLORS.transparentGray35};
-  background: rgba(128, 128, 128, 0.15);
-  width: 370px;
-  height: ${(props) => DIMS[props.$size].height}px;
-  padding: ${(props) => DIMS[props.$size].padding}px;
-  border-radius: ${(props) => DIMS[props.$size].radius}px;
+  background: ${COLORS.transparentGray15};
+  padding: var(--padding);
+  border-radius: var(--radius);
+`
+
+const GuaranteedRadius = styled.div`
+  border-radius: 4px;
   overflow: hidden;
 `
 
 const Bar = styled.div`
-  background-color: #4747eb;
-  width: ${(props) => props.$value}%;
-  height: 100%;
-  border-radius: ${(props) =>
-    props.$size === 'large'
-      ? props.$value >= 99.5
-        ? '4px'
-        : '4px 0 0 4px'
-      : 'none'};
+  background-color: ${COLORS.primary};
+  width: var(--width);
+  height: var(--height);
 `
 
 const ProgressBar = ({ value, size = 'medium' }) => {
+  const dims = DIMS[size]
   return (
     <BarContainer
       role='progressbar'
       aria-valuenow={value}
       aria-valuemin={0}
       aria-valuemax={100}
-      $size={size}
+      style={{
+        '--padding': dims.padding + 'px',
+        '--radius': dims.radius + 'px',
+      }}
     >
-      <Bar $size={size} $value={value}>
-        <VisuallyHidden>{value}%</VisuallyHidden>
-      </Bar>
+      <GuaranteedRadius>
+        <Bar style={{ '--height': dims.height + 'px', '--width': value + '%' }}>
+          <VisuallyHidden>{value}%</VisuallyHidden>
+        </Bar>
+      </GuaranteedRadius>
     </BarContainer>
   )
 }
